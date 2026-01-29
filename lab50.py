@@ -147,7 +147,7 @@ class MockCheck50:
             if res.returncode != 0:
                 raise Exception(f"C# Derleme Hatası:\n{res.stderr}")
 
-class Failure(Exception):
+    class Failure(Exception):
         def __init__(self, message):
             super().__init__(message)
 
@@ -156,7 +156,6 @@ class Failure(Exception):
             self.expected = expected
             self.actual = actual
             super().__init__(f"\nBeklenen:\n{str(expected)}\n\nGerçekleşen:\n{str(actual)}")
-
 
 mock_c50 = MockCheck50()
 
