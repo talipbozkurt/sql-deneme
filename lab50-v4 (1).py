@@ -1,0 +1,185 @@
+import os
+import sys
+import importlib.util
+import subprocess
+import re
+import sqlite3
+
+class MockRunner:
+    def __init__(self, command):
+        self.command = command
+        self.input_queue = []  # Girdileri sırayla tutmak için
+        self.stdout_text = ""
+        self.returncode = 0
+        self.executed = False
+
+    def stdin(self, data):
+        """Öğrencinin koduna gönderilecek her bir girdiyi kuyruğa ekler."""
+        self.input_queue.append(str(data))
+        return self
+
+    def stdout(self, *args):
+        if not self.executed: self._decide_and_run()
+        match_found = False
+        for pattern in args:
+            if not isinstance(pattern, str): continue
+            # Hem Regex hem de normal string kontrolü
+            if re.search(pattern, self.stdout_text, re.MULTILINE | re.IGNORECASE):
+                match_found = True
+                break
+            if str(pattern).lower() in self.stdout_text.lower():
+                match_found = True
+                break
+        
+        if not match_found:
+            raise Exception(f"Çıktı eşleşmedi.\nBeklenen: {args}\nGelen: {self.stdout_text.strip()[:200]}")
+        return self
+
+    def exit(self, code):
+        if not self.executed: self._decide_and_run()
+        if self.returncode != code:
+            raise Exception(f"Hatalı Exit Code! Beklenen: {code}, Gelen: {self.returncode}")
+        return self
+
+    def _decide_and_run(self):
+        if ".sql" in self.command:
+            self._run_sql()
+        else:
+            self._run_process()
+
+    def _run_sql(self):
+        try:
+            sql_file_match = re.search(r"(\w+\.sql)", self.command)
+            db_file = "movies.db"
+            if sql_file_match:
+                with open(sql_file_match.group(1), 'r') as f:
+                    query = f.read()
+            else:
+                query = self.command
+            conn = sqlite3.connect(db_file)
+            cursor = conn.cursor()
+            cursor.execute(query)
+            self.stdout_text = "\n".join([str(row[0]) for row in cursor.fetchall() if row])
+            conn.close()
+            self.executed = True
+        except Exception as e:
+            raise Exception(f"SQL Hatası: {e}")
+
+    def _run_process(self):
+        try:
+            cmd_list = self.command.split()
+
+            # AKILLI ÇALIŞTIRMA: .c yoksa ve .exe varsa mono ile çalıştır
+            if cmd_list[0].startswith("./") or "/" not in cmd_list[0]:
+                base_name = cmd_list[0].replace("./", "")
+                if not os.path.exists(base_name) and os.path.exists(base_name + ".exe"):
+                    cmd_list = ["mono", base_name + ".exe"] + cmd_list[1:]
+                elif base_name.endswith(".exe") and sys.platform != "win32":
+                    if "mono" not in cmd_list: cmd_list.insert(0, "mono")
+
+            proc = subprocess.Popen(
+                cmd_list, 
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                text=True
+            )
+
+            # Kuyruktaki girdileri \n ile birleştirip 'Enter' simülasyonu yapıyoruz
+            input_str = "\n".join(self.input_queue) + "\n" if self.input_queue else None
+            
+            # Programı çalıştır ve girdileri gönder
+            self.stdout_text, stderr_text = proc.communicate(input=input_str, timeout=5)
+            self.returncode = proc.returncode
+            
+            if self.returncode != 0 and not self.stdout_text:
+                self.stdout_text = stderr_text
+            self.executed = True
+        except Exception as e:
+            raise Exception(f"Çalıştırma Hatası: {e}")
+
+class MockCheck50:
+    def __init__(self):
+        self.c = self.C(self)
+        self.csharp = self.CSharp()
+
+    def check(self, dependency=None):
+        def decorator(func):
+            func._is_check = True
+            func._name = func.__name__
+            return func
+        return decorator
+
+    def exists(self, filename):
+        if not os.path.exists(filename):
+            alt_file = filename.replace(".c", ".cs")
+            if not os.path.exists(alt_file):
+                raise Exception(f"Dosya bulunamadı: {filename} (veya {alt_file})")
+
+    def include(self, *args):
+        pass
+
+    def run(self, command):
+        return MockRunner(command)
+
+    class C:
+        def __init__(self, parent):
+            self.parent = parent
+
+        def compile(self, filename, lcs50=False):
+            if not os.path.exists(filename):
+                cs_file = filename.replace(".c", ".cs")
+                if os.path.exists(cs_file):
+                    return self.parent.csharp.compile(cs_file)
+                raise Exception(f"Dosya bulunamadı: {filename}")
+
+            output = filename.replace(".c", "")
+            cmd = ["clang", "-o", output, filename]
+            if lcs50: cmd.append("-lcs50")
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            if res.returncode != 0: raise Exception(f"C Derleme Hatası:\n{res.stderr}")
+
+    class CSharp:
+        def compile(self, filename):
+            output = filename.replace(".cs", ".exe")
+            cmd = ["mcs", "-out:" + output, filename]
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            if res.returncode != 0:
+                raise Exception(f"C# Derleme Hatası:\n{res.stderr}")
+
+mock_c50 = MockCheck50()
+
+def run_local_test(test_folder):
+    # Mock modüllerini sisteme tanıt
+    sys.modules["check50"] = mock_c50
+    sys.modules["check50.c"] = mock_c50.c
+    sys.modules["check50.csharp"] = mock_c50.csharp
+
+    init_path = os.path.join(test_folder, "__init__.py")
+    if not os.path.exists(init_path):
+        print(f"Hata: {init_path} bulunamadı!")
+        return
+
+    spec = importlib.util.spec_from_file_location("test_module", init_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    print(f"🚀 Yerel Test Motoru Başladı: {test_folder}\n" + "="*50)
+    
+    # Test fonksiyonlarını bul ve sırala
+    test_funcs = [getattr(module, a) for a in dir(module) if hasattr(getattr(module, a), "_is_check")]
+    test_funcs.sort(key=lambda x: 0 if x._name in ['exists', 'compiles'] else 1)
+
+    for func in test_funcs:
+        try:
+            print(f"[*] {func._name:35}", end=" ")
+            func()
+            print("✅ PASS")
+        except Exception as e:
+            print(f"❌ FAIL\n    👉 {str(e)}")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Kullanım: python3 lab50.py <test_klasoru>")
+    else:
+        run_local_test(sys.argv[1])
