@@ -155,7 +155,7 @@ class Failure(Exception):
         def __init__(self, expected, actual):
             self.expected = expected
             self.actual = actual
-            super().__init__(f"\nBeklenen:\n{expected}\n\nGerçekleşen:\n{actual}")
+            super().__init__(f"\nBeklenen:\n{str(expected)}\n\nGerçekleşen:\n{str(actual)}")
 
 
 mock_c50 = MockCheck50()
