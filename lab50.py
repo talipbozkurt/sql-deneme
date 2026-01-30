@@ -103,10 +103,11 @@ class MockCheck50:
         self.c = self.C(self)
         self.csharp = self.CSharp()
 
-    def check(self, dependency=None):
+    def check(self, *args, **kwargs):
         def decorator(func):
             func._is_check = True
             func._name = func.__name__
+            func._points = kwargs.get('points', 1) # Varsayılan: 1 Puan
             return func
         return decorator
 
@@ -254,13 +255,33 @@ def run_local_test(test_folder):
     test_funcs = [getattr(module, a) for a in dir(module) if hasattr(getattr(module, a), "_is_check")]
     test_funcs.sort(key=lambda x: 0 if x._name in ['exists', 'compiles'] else 1)
 
+    total_score = 0
+    max_score = 0
+    passed_count = 0
+    total_count = 0
+
     for func in test_funcs:
+        total_count += 1
+        points = getattr(func, "_points", 1) # Puan tanımlı değilse 1 say
+        max_score += points
+
         try:
-            print(f"[*] {func._name:35}", end=" ")
+            print(f"[*] {func._name:30} ({points} Puan)", end=" ")
             func()
             print("✅ PASS")
+            passed_count += 1
+            total_score += points
         except Exception as e:
             print(f"❌ FAIL\n    👉 {str(e)}")
+    
+    print("="*50)
+    print(f"Sonuç: {passed_count}/{total_count} Test Başarılı")
+    print(f"🏆 TOPLAM PUAN: {total_score} / {max_score}")
+    
+    if passed_count < total_count:
+        sys.exit(1)
+    else:
+        sys.exit(0)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
