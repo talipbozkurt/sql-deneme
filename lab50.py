@@ -107,7 +107,7 @@ class MockCheck50:
         def decorator(func):
             func._is_check = True
             func._name = func.__name__
-            func._points = kwargs.get('points', 1) # Varsayılan: 1 Puan
+            func._points = kwargs.get('points', 0) # Varsayılan: 0 Puan (Sadece kontrol, puan yok)
             return func
         return decorator
 
@@ -262,11 +262,15 @@ def run_local_test(test_folder):
 
     for func in test_funcs:
         total_count += 1
-        points = getattr(func, "_points", 1) # Puan tanımlı değilse 1 say
+        points = getattr(func, "_points", 0) # Puan tanımlı değilse 0 say
         max_score += points
 
-        try:
+        if points > 0:
             print(f"[*] {func._name:30} ({points} Puan)", end=" ")
+        else:
+            print(f"[*] {func._name:30} (Kontrol)", end=" ")
+
+        try:
             func()
             print("✅ PASS")
             passed_count += 1
@@ -279,8 +283,11 @@ def run_local_test(test_folder):
     print(f"🏆 TOPLAM PUAN: {total_score} / {max_score}")
     
     if passed_count < total_count:
+        print("\n⚠️  DİKKAT: Tüm testler geçmediği için 'Autograding' kırmızı işaretlenecektir.")
+        print("    Bu normaldir. Tam puan aldığınızda yeşile dönecektir.")
         sys.exit(1)
     else:
+        print("\n🎉 TEBRİKLER! Tüm testleri geçtiniz.")
         sys.exit(0)
 
 if __name__ == "__main__":
