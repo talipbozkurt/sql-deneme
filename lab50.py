@@ -155,7 +155,48 @@ class MockCheck50:
         def __init__(self, expected, actual):
             self.expected = expected
             self.actual = actual
-            super().__init__(f"\nBeklenen:\n{str(expected)}\n\nGerçekleşen:\n{str(actual)}")
+            
+            try:
+                # Beklenen veriyi satırlarına ayır ve temizle
+                exp_list = [line.strip() for line in str(expected).splitlines() if line.strip()]
+                act_list = [line.strip() for line in str(actual).splitlines() if line.strip()]
+                
+                exp_set = set(exp_list)
+                act_set = set(act_list)
+                
+                # Kesişim hesapla
+                matches = exp_set.intersection(act_set)
+                match_count = len(matches)
+                total_expected = len(exp_set)
+                
+                percentage = 0
+                if total_expected > 0:
+                    percentage = (match_count / total_expected) * 100
+                
+                # Eksik olanlar
+                missing = list(exp_set - act_set)
+                missing.sort()
+                
+                # Fazla olanlar
+                extra = list(act_set - exp_set)
+                extra.sort()
+                
+                msg = f"\n\n📊 Test Analizi:\n---------------\n✅ Başarı: {match_count}/{total_expected} (%{percentage:.1f} Eşleşme)"
+                
+                if missing:
+                    msg += f"\n❌ Eksik Olanlar ({len(missing)} adet):\n" + "\n".join([f"   - {m}" for m in missing[:5]])
+                    if len(missing) > 5: msg += f"\n   ...ve {len(missing)-5} tane daha."
+                
+                if extra:
+                    msg += f"\n⚠️ Fazladan Gelenler ({len(extra)} adet):\n" + "\n".join([f"   + {e}" for e in extra[:5]])
+                    if len(extra) > 5: msg += f"\n   ...ve {len(extra)-5} tane daha."
+                
+                msg += f"\n\n📋 Tam Beklenen Liste:\n{str(expected)}\n\n📋 Sizin Çıktınız:\n{str(actual)}"
+                
+                super().__init__(msg)
+            except Exception:
+                # Hata durumunda (veya simple strings ise) standart mesaj
+                super().__init__(f"\nBeklenen:\n{str(expected)}\n\nGerçekleşen:\n{str(actual)}")
 
 mock_c50 = MockCheck50()
 
