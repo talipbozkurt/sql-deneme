@@ -147,9 +147,52 @@ class MockCheck50:
             if res.returncode != 0:
                 raise Exception(f"C# Derleme Hatası:\n{res.stderr}")
 
+    class Failure(Exception):
+        def __init__(self, message):
+            super().__init__(message)
+
+    class Mismatch(Exception):
+        def __init__(self, expected, actual):
+            self.expected = expected
+            self.actual = actual
+            super().__init__(f"\nBeklenen:\n{str(expected)}\n\nGerçekleşen:\n{str(actual)}")
+
 mock_c50 = MockCheck50()
 
+def reset_database():
+    try:
+        db_path = "movies.db"
+        setup_sql_path = "setup.sql"
+        
+        if not os.path.exists(setup_sql_path):
+            print(f"UYARI: {setup_sql_path} bulunamadı, veritabanı sıfırlanamadı!")
+            return
+
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Mevcut tabloları temizle
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        for table_name in tables:
+            cursor.execute(f"DROP TABLE IF EXISTS {table_name[0]}")
+            
+        # setup.sql dosyasını oku ve çalıştır
+        with open(setup_sql_path, "r") as f:
+            sql_script = f.read()
+        
+        cursor.executescript(sql_script)
+        conn.commit()
+        conn.close()
+        print("✅ Veritabanı başarıyla sıfırlandı ve setup.sql ile yeniden oluşturuldu.")
+        
+    except Exception as e:
+        print(f"❌ Veritabanı sıfırlama hatası: {e}")
+
 def run_local_test(test_folder):
+    # Veritabanını sıfırla (Temiz test ortamı)
+    reset_database()
+
     # Mock modüllerini sisteme tanıt
     sys.modules["check50"] = mock_c50
     sys.modules["check50.c"] = mock_c50.c
