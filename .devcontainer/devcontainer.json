@@ -1,0 +1,128 @@
+{
+  "name": "GitHub Classroom - SQL, Python, C, C#",
+  // Dockerfile dosyasının konumunu belirtir.
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  
+  // C/C++ Debugger (GDB) çalışabilmesi için güvenlik ayarları: olmazsa öğrenciler kodlarını satır satır debug edemezler.
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  
+  // VS CODE EKLENTİLERİ VE AYARLARI
+  
+  "customizations": {
+    "vscode": {
+      // Öğrenci ortamı açtığında otomatik yüklenecek eklentiler.
+      // NOT: GitHub Copilot (Yapay Zeka) devre dışı bırakılmıştır.
+      "extensions": [
+        // --- Yapay Zeka (AI) ---
+        "github.copilot",      // Kod tamamlama
+        "github.copilot-chat", // Soru sorma, kod açıklatma
+        
+        // --- C/C++ ---
+        "ms-vscode.cpptools",           // Intellisense ve Debugging
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+        "formulahendry.code-runner",    // Sağ üstteki "Play" butonu (hızlı çalıştırma)
+        
+        // --- Python ---
+        "ms-python.python",
+        "ms-python.vscode-pylance",     // Python otomatik tamamlama
+        "ms-python.black-formatter",    // Python kodunu otomatik düzenler (Standart için)
+        "ms-python.pylint",             // Hata denetimi
+        "ms-python.debugpy",
+        
+        // --- C# / .NET ---
+        "ms-dotnettools.csharp",        // C# dil desteği
+        "ms-dotnettools.csdevkit",      // Modern .NET geliştirme kiti
+        "kreativ-software.csharpextensions", // C# projelerinde sağ tık menüsüne "New Interface" gibi seçenekler ekler.
+        
+        // --- SQL ---
+        "mtxr.sqltools",                // VS Code içinde veritabanı yönetim arayüzü
+        "mtxr.sqltools-driver-sqlite",  // SQLite sürücüsü
+        "mtxr.sqltools-driver-mysql",   // MySQL sürücüsü
+        "mtxr.sqltools-driver-pg",      // PostgreSQL sürücüsü
+        
+        // --- Genel araçlar, yardımcılar ---
+        "eamodio.gitlens",                          // Git geçmişini satır satır gösterir
+        "streetsidesoftware.code-spell-checker",    // Kodun içindeki İngilizce kelime hatalarını bulur.
+        "esbenp.prettier-vscode",                   // Genel kod düzenleyici
+        "editorconfig.editorconfig",
+        "visualstudioexptteam.vscodeintellicode"    // Yapay zeka destekli kod tamamlama sunar.
+      ],
+      
+      // Settings
+      "settings": {
+        // --- Genel Editör Ayarları ---
+        "editor.formatOnSave": true, // Dosya kaydedilince kodu otomatik düzeltir
+        "editor.rulers": [80, 120], // 80 ve 120 karakterde dikey çizgi (Temiz kod için)
+        "editor.tabSize": 4,    // Standart tab boşluğu
+        "editor.insertSpaces": true, // Satır sonu gereksiz boşlukları siler
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true, // Dosyayı kaydettiğinde dosyanın en sonuna otomatik olarak boş bir satır ekler.
+   
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.fontSize": 14, // Okunabilir terminal boyutu
+        
+        // --- C/C++ Ayarları ---
+        "C_Cpp.default.cStandard": "c17",   // Modern C standardı
+        "C_Cpp.default.cppStandard": "c++17",
+        "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+        "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 100 }", // kodları Google standartlarına göre (4 boşluk, süslü parantez aynı satırda vb.) otomatik düzeltir.
+        
+        // --- Python Ayarları ---
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.testing.pytestEnabled": true,   // Test ayarları (pytest)
+        "python.testing.pytestArgs": ["tests"],
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+        
+        // C# ayarları
+        "dotnet.server.useOmnisharp": false,
+        "[csharp]": {
+          "editor.defaultFormatter": "ms-dotnettools.csharp",
+          "editor.formatOnSave": true
+        },
+        
+        // SQL ayarları
+        "sqltools.useNodeRuntime": true,
+        "[sql]": {
+          "editor.defaultFormatter": "mtxr.sqltools"
+        },
+        
+        
+        // Git ayarları
+        "git.enableSmartCommit": true,
+        "git.confirmSync": false,
+        "git.autofetch": true
+      }
+    }
+  },
+  
+  // Port forwarding
+  "forwardPorts": [
+    5000,  // Web apps
+    8000,  // Python SimpleHTTPServer
+    8080,  // Alternatif web
+    3306,  // MySQL
+    5432   // PostgreSQL
+  ],
+  
+  // Post create command
+  "postCreateCommand": "echo 'Geliştirme ortamı hazır! 🚀' && gcc --version && python3 --version && dotnet --version && sqlite3 --version",
+  
+  // User
+  "remoteUser": "student",
+  
+  }
+}
