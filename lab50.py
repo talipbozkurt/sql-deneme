@@ -255,15 +255,14 @@ def run_local_test(test_folder):
     test_funcs = [getattr(module, a) for a in dir(module) if hasattr(getattr(module, a), "_is_check")]
     test_funcs.sort(key=lambda x: 0 if x._name in ['exists', 'compiles'] else 1)
 
-    total_score = 0
-    max_score = 0
+    earned_points = 0
+    max_points = 0
     passed_count = 0
-    total_count = 0
+    total_count = len(test_funcs)
 
     for func in test_funcs:
-        total_count += 1
         points = getattr(func, "_points", 0) # Puan tanımlı değilse 0 say
-        max_score += points
+        max_points += points
 
         if points > 0:
             print(f"[*] {func._name:30} ({points} Puan)", end=" ")
@@ -273,7 +272,7 @@ def run_local_test(test_folder):
         try:
             func()
             print("✅ PASS")
-            passed_tests += 1
+            passed_count += 1
             earned_points += points
         except Exception as e:
             print(f"❌ FAIL\n    👉 {str(e)}")
@@ -281,21 +280,16 @@ def run_local_test(test_folder):
     print("="*50)
     print("📊 TEST SONUÇLARI ÖZETİ")
     print("="*50)
-    print(f"✅ Geçen Testler : {passed_tests} / {total_tests}")
+    print(f"✅ Geçen Testler : {passed_count} / {total_count}")
     
-    failed_tests = total_tests - passed_tests
-    if failed_tests > 0:
-        print(f"❌ Kalan Testler : {failed_tests}")
+    failed_count = total_count - passed_count
+    if failed_count > 0:
+        print(f"❌ Kalan Testler : {failed_count}")
         
-    # Puanı 100 üzerinden hesaplama
-    if total_points > 0:
-        scaled_score = (earned_points / total_points) * 100
-    else:
-        scaled_score = 0
-        
-    print(f"🏆 Toplam Puan   : {scaled_score:.1f} / 100.0 (Ham Puan: {earned_points}/{total_points})")
+    print(f"🏆 TOPLAM PUAN  : {earned_points} / {max_points}")
     print("="*50)
-    if passed_tests < total_tests:
+    
+    if passed_count < total_count:
         print("\n⚠️  DİKKAT: Tüm testler geçmediği için 'Autograding' kırmızı işaretlenecektir.")
         print("    Bu normaldir. Tam puan aldığınızda yeşile dönecektir.")
         sys.exit(1)
