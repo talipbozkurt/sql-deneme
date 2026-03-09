@@ -273,16 +273,29 @@ def run_local_test(test_folder):
         try:
             func()
             print("✅ PASS")
-            passed_count += 1
-            total_score += points
+            passed_tests += 1
+            earned_points += points
         except Exception as e:
             print(f"❌ FAIL\n    👉 {str(e)}")
     
     print("="*50)
-    print(f"Sonuç: {passed_count}/{total_count} Test Başarılı")
-    print(f"🏆 TOPLAM PUAN: {total_score} / {max_score}")
+    print("📊 TEST SONUÇLARI ÖZETİ")
+    print("="*50)
+    print(f"✅ Geçen Testler : {passed_tests} / {total_tests}")
     
-    if passed_count < total_count:
+    failed_tests = total_tests - passed_tests
+    if failed_tests > 0:
+        print(f"❌ Kalan Testler : {failed_tests}")
+        
+    # Puanı 100 üzerinden hesaplama
+    if total_points > 0:
+        scaled_score = (earned_points / total_points) * 100
+    else:
+        scaled_score = 0
+        
+    print(f"🏆 Toplam Puan   : {scaled_score:.1f} / 100.0 (Ham Puan: {earned_points}/{total_points})")
+    print("="*50)
+    if passed_tests < total_tests:
         print("\n⚠️  DİKKAT: Tüm testler geçmediği için 'Autograding' kırmızı işaretlenecektir.")
         print("    Bu normaldir. Tam puan aldığınızda yeşile dönecektir.")
         sys.exit(1)
