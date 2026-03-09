@@ -1,0 +1,41 @@
+name: Autograding
+
+on: [push]
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout student repo
+        uses: actions/checkout@v4
+
+      # 🔍 DEBUG
+      - name: Debug workspace
+        run: |
+          echo "PWD:"
+          pwd
+          echo "FILES:"
+          ls -la
+
+      # 🔒 FETCH HIDDEN TESTS
+      - name: Fetch hidden tests
+        run: |
+          # Download __init__.py to the checking directory (current directory)
+          python -c "import urllib.request; urllib.request.urlretrieve('https://gist.githubusercontent.com/Yildirim-AliD/e919ea04e34f807f47eba0ba052d033e/raw/b79a4526547b7acc8abbe4e1c78be1d13118ca23/gistfile1.txt', '__init__.py')"
+
+      # 📦 INSTALL DEPENDENCIES
+      - name: Install dependencies
+        run: |
+          pip install cs50 sqlparse
+
+      # 🧪 RUN AUTOGRADER
+      - name: Run autograder
+        run: |
+          # 1. Run the script in the current directory (.)
+          # 2. lab50.py is assumed to be in the root based on your repo structure
+          python3 lab50.py .
