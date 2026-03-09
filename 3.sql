@@ -1,0 +1,3 @@
+-- 3. 2018+ filmleri (A-Z)
+-- Görev: 2018 veya sonrasında vizyona giren filmlerin isimlerini (title) alfabetik sıraya göre listeleyen SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

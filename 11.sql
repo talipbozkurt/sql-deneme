@@ -1,0 +1,3 @@
+-- 11. Chadwick Boseman İlk 5
+-- Görev: Chadwick Boseman'ın rol aldığı en yüksek puanlı 5 filmin ismini (title) puanlarına (rating) göre azalan sırada listeleyen SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

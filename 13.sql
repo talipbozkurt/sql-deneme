@@ -1,0 +1,3 @@
+-- 13. Kevin Bacon Ağı
+-- Görev: 1958 doğumlu Kevin Bacon ile aynı filmde rol almış tüm oyuncuların isimlerini (name) listeleyen SQL sorgusunu yazın. (Kevin Bacon hariç)
+-- Sorgunuzu aşağıya yazın:

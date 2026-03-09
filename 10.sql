@@ -1,0 +1,3 @@
+-- 10. 9.0+ Puanlı Yönetmenler
+-- Görev: IMDb puanı 9.0 veya üzeri olan filmleri yönetmiş tüm yönetmenlerin isimlerini (name) listeleyen SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

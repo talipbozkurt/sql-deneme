@@ -1,0 +1,3 @@
+-- 12. Cooper & Gaga Ortak
+-- Görev: Bradley Cooper ve Lady Gaga'nın birlikte (her ikisinin de rol aldığı) oynadığı tüm filmlerin isimlerini (title) listeleyen SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

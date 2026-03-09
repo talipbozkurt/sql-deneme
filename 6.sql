@@ -1,0 +1,3 @@
+-- 6. 2012 Ort. Rating
+-- Görev: 2012 yılında vizyona giren tüm filmlerin ortalama IMDb puanını (rating) bulan SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

@@ -1,0 +1,4 @@
+-- 7. 2010 Filmleri & Puan
+-- Görev: 2010 yılında vizyona giren tüm filmlerin isimlerini (title) ve IMDb puanlarını (rating) listeleyen SQL sorgusunu yazın.
+-- Sıralama: Önce puana göre azalan (büyükten küçüğe), puanları eşit olanları isme göre alfabetik (A-Z) sıralayın.
+-- Sorgunuzu aşağıya yazın:

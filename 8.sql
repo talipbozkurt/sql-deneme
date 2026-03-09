@@ -1,0 +1,2 @@
+-- 8. Toy Story Oyuncuları
+-- Sorgunuzu aşağıya yazın:

@@ -1,0 +1,3 @@
+-- 4. 10.0 Rating sayısı
+-- Görev: Veritabanında (ratings tablosunda) 10.0 puan almış olan film sayısını bulan SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

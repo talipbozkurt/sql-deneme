@@ -1,0 +1,3 @@
+-- 9. 2004 Doğumlu Oyuncular
+-- Görev: 2004 yılında vizyona giren filmlerde rol almış olan tüm oyuncuların isimlerini (name), doğum yıllarına (birth) göre listeleyen SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:

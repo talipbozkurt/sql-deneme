@@ -1,0 +1,3 @@
+-- 2. Emma Stone doğum yılı
+-- Görev: Emma Stone'un doğum yılını (birth) bulan SQL sorgusunu yazın.
+-- Sorgunuzu aşağıya yazın:
