@@ -26,7 +26,7 @@ jobs:
       - name: Fetch hidden tests
         run: |
           # Download __init__.py to the checking directory (current directory)
-          python -c "import urllib.request; urllib.request.urlretrieve('https://gist.githubusercontent.com/talipbozkurt/a5b446bf6586de83158ea660d37beb78/raw/03b66ac4823ce4f38d7b09c2928cd078fed9683f/gistfile1.txt', '__init__.py')"
+          python -c "import urllib.request; urllib.request.urlretrieve('https://gist.githubusercontent.com/talipbozkurt/a5b446bf6586de83158ea660d37beb78/raw/5931e8976b17d6180df1d7bc9f96e6a19d71fc15/gistfile1.txt', '__init__.py')"
 
       # 📦 INSTALL DEPENDENCIES
       - name: Install dependencies
