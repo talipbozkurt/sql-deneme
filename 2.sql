@@ -1,0 +1,3 @@
+-- 2.sql'de, Emma Stone'un doğum yılını (birth) bulmak için bir SQL sorgusu yazın.
+-- Sorgunuz, tek bir sütun ve tek bir satır (sadece doğum yılı) içeren bir tablo döndürmelidir.
+-- Emma Stone'un adını doğrudan sorgunuzda arayabilirsiniz.

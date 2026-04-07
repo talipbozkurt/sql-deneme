@@ -1,0 +1,4 @@
+-- 13.sql'de, Kevin Bacon ile aynı filmde rol almış tüm kişilerin isimlerini (name) listeleyen bir SQL sorgusu yazın.
+-- Sorgunuz, her kişinin adı için tek bir sütun içeren bir tablo döndürmelidir.
+-- Veritabanında "Kevin Bacon" adında birden fazla kişi olabilir. Sadece 1958 doğumlu Kevin Bacon'ı seçtiğinizden emin olun.
+-- Sonuç listesinde Kevin Bacon'ın kendisi DAHİL EDİLMEMELİDİR.

@@ -1,0 +1,2 @@
+-- 12.sql'de, hem Johnny Depp hem de Helena Bonham Carter'ın birlikte rol aldığı tüm filmlerin isimlerini (title) listeleyen bir SQL sorgusu yazın.
+-- Sorgunuz, her filmin ismi için tek bir sütun içeren bir tablo döndürmelidir.

@@ -1,0 +1,2 @@
+-- 6.sql'de, 2012 yılında vizyona giren tüm filmlerin ortalama reytingini (rating) hesaplayan bir SQL sorgusu yazın.
+-- Sorgunuz, tek bir sütun ve tek bir satır (sadece ortalama puan) içeren bir tablo döndürmelidir.

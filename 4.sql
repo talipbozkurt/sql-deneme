@@ -1,0 +1,2 @@
+-- 4.sql'de, IMDb puanı (rating) 10.0 olan kaç adet film olduğunu belirleyen bir SQL sorgusu yazın.
+-- Sorgunuz, tek bir sütun ve tek bir satır (sadece film sayısı) içeren bir tablo döndürmelidir.

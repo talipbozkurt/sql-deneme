@@ -1,0 +1,3 @@
+-- 9.sql'de, 2004 yılında vizyona giren herhangi bir filmde rol almış tüm kişilerin isimlerini (name) listeleyen bir SQL sorgusu yazın.
+-- Liste, kişilerin doğum yıllarına göre yeniden eskiye (artan sırayla) sıralanmalıdır.
+-- Aynı kişinin birden fazla filmde oynaması ihtimaline karşı isimlerin tekrarsız (unique) olmasına dikkat edin.

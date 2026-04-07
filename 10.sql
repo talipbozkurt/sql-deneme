@@ -1,0 +1,3 @@
+-- 10.sql'de, en az 9.0 puan almış herhangi bir filmi yönetmiş tüm kişilerin isimlerini (name) listeleyen bir SQL sorgusu yazın.
+-- Sorgunuz, her yönetmenin adı için tek bir sütun içeren bir tablo döndürmelidir.
+-- Aynı kişi birden fazla yüksek puanlı film yönettiyse bile isminin listede bir kez (tekrarsız) yer almasını sağlayın.
